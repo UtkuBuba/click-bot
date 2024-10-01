@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BubaBot - Tıklama Sayacı</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            background-image: url('https://i.imgur.com/flTqPvm.png');
+            background-size: cover;
+            background-position: center;
+            margin: 1;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        .container {
+            text-align: center;
+        }
+        .button {
+            width: 100px;
+            height: 100px;
+            border-radius: 10%;
+            background-color: #473631;
+            color: white;
+            font-size: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        .button img {
+            width: 90px;
+            height: 90px;
+        }
+        .counter {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .celebration {
+            display: none;
+            font-size: 32px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="button" id="clickButton">
+            <img src="https://i.imgur.com/1Ow5jKC.jpeg" alt="Buba Token Logo">
+        </div>
+        <div class="counter" id="counter">Click Count: 0</div>
+        <div class="celebration" id="celebration">Congratulations! You've won 100$BUBA!</div>
+    </div>
+
+    <script>
+        // Telegram Web App API başlangıcı
+        const tg = window.Telegram.WebApp;
+        tg.expand();  // Uygulama tam ekran yapılır
+
+        let clicks = 0;
+
+        const clickButton = document.getElementById('clickButton');
+        const counterDisplay = document.getElementById('counter');
+        const celebrationDisplay = document.getElementById('celebration');
+
+        clickButton.addEventListener('click', () => {
+            clicks++;
+            counterDisplay.textContent = `Tıklamalar: ${clicks}`;
+
+            if (clicks >= 100) {
+                // 100 tıklamaya ulaşıldığında kutlama ekranını göster
+                celebrationDisplay.style.display = 'block';
+                tg.sendData(JSON.stringify({ clicks: clicks, event: '100_clicks' }));
+
+                // Sayaç sıfırlanır
+                clicks = 0;
+
+                // 3 saniye sonra kutlama ekranı gizlenir
+                setTimeout(() => {
+                    celebrationDisplay.style.display = 'none';
+                    counterDisplay.textContent = 'Tıklamalar: 0';
+                }, 3000);
+            } else {
+                tg.sendData(JSON.stringify({ clicks: clicks, event: 'click' }));
+            }
+        });
+
+        // Kullanıcıdan gelen veriyi alma
+        tg.onEvent('mainButtonClicked', () => {
+            tg.sendData('Main button clicked!');
+        });
+    </script>
+</body>
+</html>
