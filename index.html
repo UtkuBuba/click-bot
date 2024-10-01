@@ -78,12 +78,11 @@
                 tg.sendData(JSON.stringify({ clicks: clicks, event: '100_clicks' }));
 
                 // Sayaç sıfırlanır
-                clicks = 0;
+                //clicks = 0;
 
                 // 3 saniye sonra kutlama ekranı gizlenir
                 setTimeout(() => {
                     celebrationDisplay.style.display = 'none';
-                    counterDisplay.textContent = 'Tıklamalar: 0';
                 }, 3000);
             } else {
                 tg.sendData(JSON.stringify({ clicks: clicks, event: 'click' }));
